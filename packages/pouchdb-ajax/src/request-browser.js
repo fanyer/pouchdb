@@ -194,15 +194,16 @@ function xhRequest(options, callback) {
       callback(null, response, data);
     } else {
       var err = {};
-      if(timedout) {
+      if (timedout) {
         err = new Error('ETIMEDOUT');
-        response.statusCode = 400;      // for consistency with node request
+        err.code = 'ETIMEDOUT';
       } else {
         try {
           err = JSON.parse(xhr.response);
         } catch(e) {}
       }
-      callback(err, response);
+      err.status = xhr.status;
+      callback(err);
     }
   };
 
